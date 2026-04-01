@@ -12,6 +12,8 @@
 //   NOTIFY_TO_EMAIL
 //   NOTIFY_PHONE       (optional, 10-digit)
 //   NOTIFY_CARRIER     (optional: att | verizon | tmobile | sprint | cricket | boost | metro)
+//   NOTIFY_PHONE_2     (optional, second 10-digit number)
+//   NOTIFY_CARRIER_2   (optional: same options as NOTIFY_CARRIER)
 
 import { Redis } from "@upstash/redis";
 
@@ -79,6 +81,12 @@ async function sendNotification(rsvp) {
   const carrier = process.env.NOTIFY_CARRIER?.toLowerCase();
   if (phone && carrier && GATEWAYS[carrier]) {
     toAddresses.push(`${phone.replace(/\D/g, "")}@${GATEWAYS[carrier]}`);
+  }
+
+  const phone2   = process.env.NOTIFY_PHONE_2;
+  const carrier2 = process.env.NOTIFY_CARRIER_2?.toLowerCase();
+  if (phone2 && carrier2 && GATEWAYS[carrier2]) {
+    toAddresses.push(`${phone2.replace(/\D/g, "")}@${GATEWAYS[carrier2]}`);
   }
 
   const emailRes = await fetch("https://api.resend.com/emails", {

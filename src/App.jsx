@@ -259,10 +259,11 @@ export default function App() {
       </div>
 
       {/* ── Tabs ── */}
-      <div style={{ background: C.white, borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "center", overflowX: "auto" }}>
-        {[["rsvp", "RSVP"], ["registry", "Registry"], ["admin", "Manage"]].map(([id, lbl]) => (
-          <button key={id} onClick={() => { setTab(id); if (id === "admin") loadRsvps(); }} style={tabBtn(tab === id)}>{lbl}</button>
+      <div style={{ background: C.white, borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "center", position: "relative" }}>
+        {[["rsvp", "RSVP"], ["registry", "Registry"]].map(([id, lbl]) => (
+          <button key={id} onClick={() => setTab(id)} style={tabBtn(tab === id)}>{lbl}</button>
         ))}
+        <button onClick={() => { setTab("admin"); loadRsvps(); }} style={{ ...tabBtn(tab === "admin"), position: "absolute", right: 0, top: 0, bottom: 0 }}>Manage</button>
       </div>
 
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "2rem 1.25rem 4rem" }}>
@@ -411,9 +412,6 @@ export default function App() {
                 style={{ ...primaryBtn, width: "100%", padding: "13px" }}>
                 Unlock
               </button>
-              <p style={{ fontSize: 11, color: C.muted, textAlign: "center", margin: "12px 0 0", letterSpacing: "0.04em" }}>
-                Default password: <span style={{ fontFamily: "monospace", background: C.ivory, padding: "1px 6px", borderRadius: 4 }}>shower</span>
-              </p>
             </div>
           ) : (
             <>
