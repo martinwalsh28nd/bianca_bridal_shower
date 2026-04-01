@@ -10,23 +10,15 @@
 //   RESEND_API_KEY
 //   NOTIFY_FROM_EMAIL
 //   NOTIFY_TO_EMAIL
-//   NOTIFY_TO_EMAIL_2  (optional, second email recipient)
-//   NOTIFY_PHONE       (optional, 10-digit)
-//   NOTIFY_CARRIER     (optional: att | verizon | tmobile | sprint | cricket | boost | metro)
+//   NOTIFY_TO_EMAIL_2      (optional, second email recipient)
+//   NOTIFY_PHONE           (optional, 10-digit number for SMS via Twilio)
+//   TWILIO_ACCOUNT_SID     (optional, for SMS)
+//   TWILIO_AUTH_TOKEN      (optional, for SMS)
+//   TWILIO_PHONE_NUMBER    (optional, e.g. +18886554026)
 
 import { Redis } from "@upstash/redis";
 
 const KV_KEY = "shower:rsvps";
-
-const GATEWAYS = {
-  att:     "txt.att.net",
-  verizon: "vtext.com",
-  tmobile: "tmomail.net",
-  sprint:  "messaging.sprintpcs.com",
-  cricket: "mms.cricketwireless.net",
-  boost:   "sms.myboostmobile.com",
-  metro:   "mymetropcs.com",
-};
 
 function getRedis() {
   return new Redis({
@@ -74,17 +66,13 @@ async function sendNotification(rsvp) {
 
   const smsText = `RSVP: ${fullName} - ${attendanceLabel}. ${rsvp.email} | ${rsvp.phone}`;
 
-  // Build recipient list
+  // Build email recipient list
   const toAddresses = [toEmail];
   if (process.env.NOTIFY_TO_EMAIL_2) {
     toAddresses.push(process.env.NOTIFY_TO_EMAIL_2);
   }
-  const phone   = process.env.NOTIFY_PHONE;
-  const carrier = process.env.NOTIFY_CARRIER?.toLowerCase();
-  if (phone && carrier && GATEWAYS[carrier]) {
-    toAddresses.push(`${phone.replace(/\D/g, "")}@${GATEWAYS[carrier]}`);
-  }
 
+  // Send email via Resend
   const emailRes = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -104,7 +92,34 @@ async function sendNotification(rsvp) {
   if (!emailRes.ok) {
     throw new Error(emailData.message || "Resend error");
   }
-  console.log(`Notification sent to ${toAddresses.join(", ")}`);
+  console.log(`Email sent to ${toAddresses.join(", ")}`);
+
+  // Send SMS via Twilio
+  const twilioSid   = process.env.TWILIO_ACCOUNT_SID;
+  const twilioToken = process.env.TWILIO_AUTH_TOKEN;
+  const twilioFrom  = process.env.TWILIO_PHONE_NUMBER;
+  const notifyPhone = process.env.NOTIFY_PHONE;
+
+  if (twilioSid && twilioToken && twilioFrom && notifyPhone) {
+    const toNumber = `+1${notifyPhone.replace(/\D/g, "")}`;
+    const smsRes = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": `Basic ${Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64")}`,
+        },
+        body: new URLSearchParams({ From: twilioFrom, To: toNumber, Body: smsText }).toString(),
+      }
+    );
+    const smsData = await smsRes.json();
+    if (!smsRes.ok) {
+      console.error("Twilio SMS error:", smsData.message);
+    } else {
+      console.log(`SMS sent to ${toNumber}`);
+    }
+  }
 }
 
 export default async function handler(req, res) {
