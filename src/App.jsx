@@ -24,7 +24,7 @@ const ADMIN_PASSWORD = "shower";
 const GUEST_LIST = [
   { firstName: "Emily",          lastName: "Walsh" },
   { firstName: "Claire",         lastName: "Walsh" },
-  { firstName: "Chris",          lastName: "Zeman" },
+  { firstName: "Christine",       lastName: "Zeman" },
   { firstName: "Laura",          lastName: "Zeman" },
   { firstName: "Dorothy",        lastName: "DeVoy" },
   { firstName: "Jeff",           lastName: "DeVoy" },
@@ -532,10 +532,12 @@ export default function App() {
                   for (const r of rsvps) {
                     const rFirst = norm(r.firstName);
                     const rLastWords = norm(r.lastName).split(/\s+/).filter(Boolean);
-                    if (rFirst !== gFirst) continue;
-                    if (norm(r.lastName) === norm(g.lastName)) return { rsvp: r, exact: true };
+                    const firstMatch = rFirst === gFirst || rFirst.startsWith(gFirst) || gFirst.startsWith(rFirst);
+                    if (!firstMatch) continue;
+                    const lastExact = norm(r.lastName) === norm(g.lastName);
                     const shared = rLastWords.some(w => gLastWords.includes(w)) || gLastWords.some(w => rLastWords.includes(w));
-                    if (shared) return { rsvp: r, exact: false };
+                    if (lastExact && rFirst === gFirst) return { rsvp: r, exact: true };
+                    if (lastExact || shared) return { rsvp: r, exact: false };
                   }
                   return { rsvp: null, exact: false };
                 };
