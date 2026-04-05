@@ -525,14 +525,25 @@ export default function App() {
 
               {/* ── Guest Table View ── */}
               {adminView === "table" && (() => {
-                const normalize = (f, l) => `${f} ${l}`.toLowerCase().trim();
+                const norm = s => s.toLowerCase().trim();
+                const findMatch = (g) => {
+                  const gFirst = norm(g.firstName);
+                  const gLastWords = norm(g.lastName).split(/\s+/).filter(Boolean);
+                  for (const r of rsvps) {
+                    const rFirst = norm(r.firstName);
+                    const rLastWords = norm(r.lastName).split(/\s+/).filter(Boolean);
+                    if (rFirst !== gFirst) continue;
+                    if (norm(r.lastName) === norm(g.lastName)) return { rsvp: r, exact: true };
+                    const shared = rLastWords.some(w => gLastWords.includes(w)) || gLastWords.some(w => rLastWords.includes(w));
+                    if (shared) return { rsvp: r, exact: false };
+                  }
+                  return { rsvp: null, exact: false };
+                };
                 const guestRows = GUEST_LIST.map(g => {
-                  const match = rsvps.find(r =>
-                    normalize(r.firstName, r.lastName) === normalize(g.firstName, g.lastName)
-                  );
-                  return { ...g, rsvp: match || null };
+                  const { rsvp, exact } = findMatch(g);
+                  return { ...g, rsvp, exactMatch: exact };
                 });
-                const responded = guestRows.filter(g => g.rsvp).length;
+                const responded = guestRows.filter(g => g.rsvp !== null).length;
                 const attending  = guestRows.filter(g => g.rsvp?.attendance === "yes").length;
                 const declining  = guestRows.filter(g => g.rsvp?.attendance === "no").length;
                 const maybe      = guestRows.filter(g => g.rsvp?.attendance === "maybe").length;
@@ -553,7 +564,14 @@ export default function App() {
                           return (
                             <tr key={i} style={{ borderBottom: `1px solid ${C.border}`, background: i % 2 === 0 ? C.white : C.bg }}>
                               <td style={{ padding: "10px 16px", color: C.muted, fontFamily: sans, width: 36 }}>{i + 1}</td>
-                              <td style={{ padding: "10px 16px", fontFamily: serif, fontSize: 15 }}>{g.firstName} {g.lastName}</td>
+                              <td style={{ padding: "10px 16px" }}>
+                                <div style={{ fontFamily: serif, fontSize: 15 }}>{g.firstName} {g.lastName}</div>
+                                {r && !g.exactMatch && (
+                                  <div style={{ fontSize: 11, color: C.muted, fontFamily: sans, marginTop: 2, fontStyle: "italic" }}>
+                                    responded as: {r.firstName} {r.lastName}
+                                  </div>
+                                )}
+                              </td>
                               <td style={{ padding: "10px 16px" }}>
                                 {r ? (
                                   <span style={{
