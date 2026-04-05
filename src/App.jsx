@@ -26,7 +26,8 @@ const GUEST_LIST = [
   { firstName: "Claire",         lastName: "Walsh" },
   { firstName: "Chris",          lastName: "Zeman" },
   { firstName: "Laura",          lastName: "Zeman" },
-  { firstName: "Dorothy & Jeff", lastName: "DeVoy" },
+  { firstName: "Dorothy",        lastName: "DeVoy" },
+  { firstName: "Jeff",           lastName: "DeVoy" },
   { firstName: "Bianca",         lastName: "Jenkins" },
   { firstName: "Lynn",           lastName: "Jenkins" },
   { firstName: "Hannah",         lastName: "Duehren" },
@@ -44,7 +45,8 @@ const GUEST_LIST = [
   { firstName: "Haley",          lastName: "Masters" },
   { firstName: "Darnell",        lastName: "Thomas" },
   { firstName: "Leah",           lastName: "Long" },
-  { firstName: "Dani & Bobby",   lastName: "Navarro" },
+  { firstName: "Dani",           lastName: "Navarro" },
+  { firstName: "Bobby",          lastName: "Navarro" },
   { firstName: "Hanna",          lastName: "Meidel" },
   { firstName: "Alexa",          lastName: "DeLaHera" },
   { firstName: "Jackie",         lastName: "Steiff" },
@@ -72,7 +74,7 @@ export default function App() {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [rsvpError, setRsvpError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [adminView, setAdminView] = useState("table");
+  const [adminView, setAdminView] = useState("details");
 
   useEffect(() => {
     const link = document.createElement("link");
