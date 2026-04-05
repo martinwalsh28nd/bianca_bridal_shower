@@ -40,6 +40,7 @@ export default function App() {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [rsvpError, setRsvpError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [adminView, setAdminView] = useState("table");
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -435,14 +436,23 @@ export default function App() {
                 <button onClick={() => { setShowEmailForm(!showEmailForm); setEmailState("idle"); setEmailMsg(""); }} style={primaryBtn}>
                   {showEmailForm ? "Hide Email Form" : "Email Summary"}
                 </button>
-                <button
-                  onClick={exportExcel}
-                  disabled={rsvps.length === 0}
-                  style={{ ...greenBtn, opacity: rsvps.length === 0 ? 0.45 : 1 }}
-                >
+                <button onClick={exportExcel} disabled={rsvps.length === 0} style={{ ...greenBtn, opacity: rsvps.length === 0 ? 0.45 : 1 }}>
                   Export Excel
                 </button>
                 <button onClick={() => setAdminUnlocked(false)} style={outlineBtn}>Lock</button>
+              </div>
+
+              {/* Sub-tabs */}
+              <div style={{ display: "flex", borderBottom: `1px solid ${C.border}`, marginBottom: "1.25rem" }}>
+                {[["table", "Guest Table"], ["details", "Full Responses"]].map(([id, lbl]) => (
+                  <button key={id} onClick={() => setAdminView(id)} style={{
+                    padding: "9px 18px", background: "transparent", border: "none",
+                    borderBottom: `2px solid ${adminView === id ? C.sage : "transparent"}`,
+                    color: adminView === id ? C.sage : C.muted, fontFamily: sans,
+                    fontSize: 12, fontWeight: adminView === id ? 500 : 400,
+                    letterSpacing: "0.07em", textTransform: "uppercase", cursor: "pointer",
+                  }}>{lbl}</button>
+                ))}
               </div>
 
               {/* Email summary form */}
@@ -479,8 +489,54 @@ export default function App() {
                 </div>
               )}
 
-              {/* RSVP list */}
-              {rsvps.length === 0 ? (
+              {/* ── Guest Table View ── */}
+              {adminView === "table" && (
+                rsvps.length === 0 ? (
+                  <div style={{ ...cardStyle, textAlign: "center", padding: "3rem", color: C.muted }}>
+                    <div style={{ fontFamily: serif, fontSize: 18, marginBottom: 8, color: C.sageMid }}>No responses yet</div>
+                    <div style={{ fontSize: 13 }}>Share the link to start collecting RSVPs.</div>
+                  </div>
+                ) : (
+                  <div style={{ ...cardStyle, padding: 0, overflow: "hidden" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                      <thead>
+                        <tr style={{ background: C.sagePale, borderBottom: `1px solid ${C.sageLight}` }}>
+                          <th style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>#</th>
+                          <th style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>Name</th>
+                          <th style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>Response</th>
+                          <th style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>Dietary</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rsvps.slice().sort((a, b) => `${a.lastName}${a.firstName}`.localeCompare(`${b.lastName}${b.firstName}`)).map((r, i) => (
+                          <tr key={r.id} style={{ borderBottom: `1px solid ${C.border}`, background: i % 2 === 0 ? C.white : C.bg }}>
+                            <td style={{ padding: "10px 16px", color: C.muted, fontFamily: sans }}>{i + 1}</td>
+                            <td style={{ padding: "10px 16px", fontFamily: serif, fontSize: 15 }}>{r.firstName} {r.lastName}</td>
+                            <td style={{ padding: "10px 16px" }}>
+                              <span style={{
+                                fontSize: 11, padding: "2px 10px", borderRadius: 20, fontFamily: sans,
+                                background: r.attendance === "yes" ? C.sagePale : r.attendance === "no" ? C.rosePale : "#FFF5F0",
+                                color: r.attendance === "yes" ? C.sage : r.attendance === "no" ? C.roseDark : "#9B7040",
+                                letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap",
+                              }}>
+                                {r.attendance === "yes" ? "✓ Attending" : r.attendance === "no" ? "✗ Declining" : "? Maybe"}
+                              </span>
+                            </td>
+                            <td style={{ padding: "10px 16px", color: C.mid, fontFamily: sans }}>{r.dietary || <span style={{ color: C.muted }}>—</span>}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <div style={{ padding: "10px 16px", background: C.bg, borderTop: `1px solid ${C.border}`, fontSize: 11, color: C.muted, fontFamily: sans, letterSpacing: "0.05em" }}>
+                      {stats.total} responded · {stats.yes} attending · {stats.no} declining · {stats.maybe} maybe
+                    </div>
+                  </div>
+                )
+              )}
+
+              {/* ── Full Responses (Details) View ── */}
+              {adminView === "details" && (
+              rsvps.length === 0 ? (
                 <div style={{ ...cardStyle, textAlign: "center", padding: "3rem", color: C.muted }}>
                   <div style={{ fontFamily: serif, fontSize: 18, marginBottom: 8, color: C.sageMid }}>No responses yet</div>
                   <div style={{ fontSize: 13 }}>Share the link to start collecting RSVPs.</div>
@@ -492,6 +548,7 @@ export default function App() {
                   </div>
                   {rsvps.slice().reverse().map(r => (
                     <div key={r.id} style={{ ...cardStyle, marginBottom: 10, borderLeft: `3px solid ${r.attendance === "yes" ? C.sage : r.attendance === "no" ? C.rose : C.roseMid}` }}>
+
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
                         <div style={{ flex: 1 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
@@ -530,7 +587,7 @@ export default function App() {
                     </div>
                   ))}
                 </>
-              )}
+              ))}
             </>
           )
         )}
