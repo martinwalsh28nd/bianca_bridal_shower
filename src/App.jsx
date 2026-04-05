@@ -21,6 +21,38 @@ const C = {
 
 const ADMIN_PASSWORD = "shower";
 
+const GUEST_LIST = [
+  { firstName: "Emily",          lastName: "Walsh" },
+  { firstName: "Claire",         lastName: "Walsh" },
+  { firstName: "Chris",          lastName: "Zeman" },
+  { firstName: "Laura",          lastName: "Zeman" },
+  { firstName: "Dorothy & Jeff", lastName: "DeVoy" },
+  { firstName: "Bianca",         lastName: "Jenkins" },
+  { firstName: "Lynn",           lastName: "Jenkins" },
+  { firstName: "Hannah",         lastName: "Duehren" },
+  { firstName: "Annette",        lastName: "Katamay" },
+  { firstName: "Margie",         lastName: "Gedeit" },
+  { firstName: "Cathy",          lastName: "McClarey" },
+  { firstName: "Maria",          lastName: "Wesolowski" },
+  { firstName: "Jackie",         lastName: "Pajor" },
+  { firstName: "Mary",           lastName: "Condon" },
+  { firstName: "Jeff",           lastName: "" },
+  { firstName: "Jake",           lastName: "" },
+  { firstName: "Lindsay",        lastName: "Gil" },
+  { firstName: "Liz",            lastName: "Boschma" },
+  { firstName: "Kristine",       lastName: "Petrella" },
+  { firstName: "Haley",          lastName: "Masters" },
+  { firstName: "Darnell",        lastName: "Thomas" },
+  { firstName: "Leah",           lastName: "Long" },
+  { firstName: "Dani & Bobby",   lastName: "Navarro" },
+  { firstName: "Hanna",          lastName: "Meidel" },
+  { firstName: "Alexa",          lastName: "DeLaHera" },
+  { firstName: "Jackie",         lastName: "Steiff" },
+  { firstName: "Meredith",       lastName: "Olson" },
+  { firstName: "Caroline",       lastName: "Moroz" },
+  { firstName: "Kelsey",         lastName: "Visser Snider" },
+];
+
 export default function App() {
   const [tab, setTab] = useState("rsvp");
   const [rsvps, setRsvps] = useState([]);
@@ -490,49 +522,74 @@ export default function App() {
               )}
 
               {/* ── Guest Table View ── */}
-              {adminView === "table" && (
-                rsvps.length === 0 ? (
-                  <div style={{ ...cardStyle, textAlign: "center", padding: "3rem", color: C.muted }}>
-                    <div style={{ fontFamily: serif, fontSize: 18, marginBottom: 8, color: C.sageMid }}>No responses yet</div>
-                    <div style={{ fontSize: 13 }}>Share the link to start collecting RSVPs.</div>
-                  </div>
-                ) : (
+              {adminView === "table" && (() => {
+                const normalize = (f, l) => `${f} ${l}`.toLowerCase().trim();
+                const guestRows = GUEST_LIST.map(g => {
+                  const match = rsvps.find(r =>
+                    normalize(r.firstName, r.lastName) === normalize(g.firstName, g.lastName)
+                  );
+                  return { ...g, rsvp: match || null };
+                });
+                const responded = guestRows.filter(g => g.rsvp).length;
+                const attending  = guestRows.filter(g => g.rsvp?.attendance === "yes").length;
+                const declining  = guestRows.filter(g => g.rsvp?.attendance === "no").length;
+                const maybe      = guestRows.filter(g => g.rsvp?.attendance === "maybe").length;
+                const pending    = guestRows.filter(g => !g.rsvp).length;
+                return (
                   <div style={{ ...cardStyle, padding: 0, overflow: "hidden" }}>
                     <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
                       <thead>
                         <tr style={{ background: C.sagePale, borderBottom: `1px solid ${C.sageLight}` }}>
-                          <th style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>#</th>
-                          <th style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>Name</th>
-                          <th style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>Response</th>
-                          <th style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>Dietary</th>
+                          {["#", "Name", "Response", "Dietary"].map(h => (
+                            <th key={h} style={{ padding: "10px 16px", textAlign: "left", fontFamily: sans, fontWeight: 500, fontSize: 11, letterSpacing: "0.07em", textTransform: "uppercase", color: C.muted }}>{h}</th>
+                          ))}
                         </tr>
                       </thead>
                       <tbody>
-                        {rsvps.slice().sort((a, b) => `${a.lastName}${a.firstName}`.localeCompare(`${b.lastName}${b.firstName}`)).map((r, i) => (
-                          <tr key={r.id} style={{ borderBottom: `1px solid ${C.border}`, background: i % 2 === 0 ? C.white : C.bg }}>
-                            <td style={{ padding: "10px 16px", color: C.muted, fontFamily: sans }}>{i + 1}</td>
-                            <td style={{ padding: "10px 16px", fontFamily: serif, fontSize: 15 }}>{r.firstName} {r.lastName}</td>
-                            <td style={{ padding: "10px 16px" }}>
-                              <span style={{
-                                fontSize: 11, padding: "2px 10px", borderRadius: 20, fontFamily: sans,
-                                background: r.attendance === "yes" ? C.sagePale : r.attendance === "no" ? C.rosePale : "#FFF5F0",
-                                color: r.attendance === "yes" ? C.sage : r.attendance === "no" ? C.roseDark : "#9B7040",
-                                letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap",
-                              }}>
-                                {r.attendance === "yes" ? "✓ Attending" : r.attendance === "no" ? "✗ Declining" : "? Maybe"}
-                              </span>
-                            </td>
-                            <td style={{ padding: "10px 16px", color: C.mid, fontFamily: sans }}>{r.dietary || <span style={{ color: C.muted }}>—</span>}</td>
-                          </tr>
-                        ))}
+                        {guestRows.map((g, i) => {
+                          const r = g.rsvp;
+                          return (
+                            <tr key={i} style={{ borderBottom: `1px solid ${C.border}`, background: i % 2 === 0 ? C.white : C.bg }}>
+                              <td style={{ padding: "10px 16px", color: C.muted, fontFamily: sans, width: 36 }}>{i + 1}</td>
+                              <td style={{ padding: "10px 16px", fontFamily: serif, fontSize: 15 }}>{g.firstName} {g.lastName}</td>
+                              <td style={{ padding: "10px 16px" }}>
+                                {r ? (
+                                  <span style={{
+                                    fontSize: 11, padding: "2px 10px", borderRadius: 20, fontFamily: sans,
+                                    background: r.attendance === "yes" ? C.sagePale : r.attendance === "no" ? C.rosePale : "#FFF5F0",
+                                    color: r.attendance === "yes" ? C.sage : r.attendance === "no" ? C.roseDark : "#9B7040",
+                                    letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap",
+                                  }}>
+                                    {r.attendance === "yes" ? "✓ Attending" : r.attendance === "no" ? "✗ Declining" : "? Maybe"}
+                                  </span>
+                                ) : (
+                                  <span style={{ fontSize: 11, padding: "2px 10px", borderRadius: 20, fontFamily: sans, background: C.ivory, color: C.muted, letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
+                                    — No Response
+                                  </span>
+                                )}
+                              </td>
+                              <td style={{ padding: "10px 16px", color: C.mid, fontFamily: sans, fontSize: 13 }}>
+                                {r?.dietary || <span style={{ color: C.muted }}>—</span>}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
-                    <div style={{ padding: "10px 16px", background: C.bg, borderTop: `1px solid ${C.border}`, fontSize: 11, color: C.muted, fontFamily: sans, letterSpacing: "0.05em" }}>
-                      {stats.total} responded · {stats.yes} attending · {stats.no} declining · {stats.maybe} maybe
+                    <div style={{ padding: "10px 16px", background: C.bg, borderTop: `1px solid ${C.border}`, fontSize: 11, color: C.muted, fontFamily: sans, letterSpacing: "0.05em", display: "flex", gap: 16, flexWrap: "wrap" }}>
+                      <span>{GUEST_LIST.length} invited</span>
+                      <span>·</span>
+                      <span style={{ color: C.sage }}>{attending} attending</span>
+                      <span>·</span>
+                      <span style={{ color: C.roseDark }}>{declining} declining</span>
+                      <span>·</span>
+                      <span style={{ color: "#9B7040" }}>{maybe} maybe</span>
+                      <span>·</span>
+                      <span>{pending} no response</span>
                     </div>
                   </div>
-                )
-              )}
+                );
+              })()}
 
               {/* ── Full Responses (Details) View ── */}
               {adminView === "details" && (
