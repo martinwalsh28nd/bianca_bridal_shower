@@ -2,21 +2,24 @@ import { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 
 const C = {
-  bg: "#FAF7F2",
-  white: "#FFFFFF",
-  ivory: "#F2EDE4",
-  sage: "#4A6648",
-  sageMid: "#7A9478",
-  sageLight: "#C8DCC6",
-  sagePale: "#ECF3EB",
+  bg: "#F4F0E8",
+  white: "#FAFAF8",
+  cream: "#EDE8DF",
+  slate: "#3D4F63",
+  slateMid: "#5A7189",
+  slateLight: "#C5D8E6",
+  slatePale: "#EDF3F8",
+  dusty: "#8FADC4",
+  gold: "#B89A6A",
+  goldLight: "#E8D9C0",
+  dark: "#2C3A47",
+  mid: "#5A6E7E",
+  muted: "#8FA0AF",
+  border: "#DDD5C9",
   rose: "#B8897F",
   roseMid: "#DDB5AE",
   rosePale: "#F7EDEB",
   roseDark: "#8B5E55",
-  dark: "#2A3828",
-  mid: "#566654",
-  muted: "#8FA08C",
-  border: "#DDD8CF",
 };
 
 const ADMIN_PASSWORD = "shower";
@@ -78,7 +81,7 @@ export default function App() {
 
   useEffect(() => {
     const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
     setTimeout(() => setFontsReady(true), 600);
@@ -205,96 +208,135 @@ export default function App() {
     maybe: rsvps.filter(r => r.attendance === "maybe").length,
   };
 
-  const serif = fontsReady ? "'Playfair Display', Georgia, serif" : "Georgia, serif";
-  const sans  = fontsReady ? "'Jost', system-ui, sans-serif" : "system-ui, sans-serif";
+  const script = fontsReady ? "'Great Vibes', cursive" : "cursive";
+  const serif  = fontsReady ? "'Cormorant Garamond', Georgia, serif" : "Georgia, serif";
+  const sans   = fontsReady ? "'Raleway', system-ui, sans-serif" : "system-ui, sans-serif";
 
   const inputStyle = {
-    width: "100%", padding: "10px 14px",
-    border: `1px solid ${C.border}`, borderRadius: 8,
-    fontFamily: sans, fontSize: 15, color: C.dark,
+    width: "100%", padding: "11px 16px",
+    border: `1px solid ${C.border}`, borderRadius: 0,
+    fontFamily: serif, fontSize: 16, color: C.dark,
     background: C.white, outline: "none",
-    boxSizing: "border-box", transition: "border-color 0.15s",
+    boxSizing: "border-box", transition: "border-color 0.2s",
+    letterSpacing: "0.02em",
   };
   const labelStyle = {
-    display: "block", fontSize: 11, letterSpacing: "0.08em",
-    textTransform: "uppercase", color: C.muted, marginBottom: 6, fontFamily: sans,
+    display: "block", fontSize: 10, letterSpacing: "0.14em",
+    textTransform: "uppercase", color: C.muted, marginBottom: 7,
+    fontFamily: sans, fontWeight: 500,
   };
   const cardStyle = {
-    background: C.white, borderRadius: 14,
-    border: `1px solid ${C.border}`, padding: "1.5rem", marginBottom: "1rem",
+    background: C.white, borderRadius: 0,
+    border: `1px solid ${C.border}`, padding: "1.75rem", marginBottom: "1rem",
   };
   const primaryBtn = {
-    padding: "11px 22px", borderRadius: 8, border: "none",
-    background: C.sage, color: C.white, fontFamily: sans,
-    fontSize: 13, fontWeight: 500, letterSpacing: "0.08em",
-    textTransform: "uppercase", cursor: "pointer", transition: "opacity 0.15s",
+    padding: "12px 28px", borderRadius: 0,
+    border: `1px solid ${C.slate}`,
+    background: C.slate, color: C.white, fontFamily: sans,
+    fontSize: 11, fontWeight: 500, letterSpacing: "0.14em",
+    textTransform: "uppercase", cursor: "pointer", transition: "all 0.2s",
   };
   const outlineBtn = {
-    padding: "11px 22px", borderRadius: 8,
+    padding: "12px 28px", borderRadius: 0,
     border: `1px solid ${C.border}`, background: "transparent",
-    color: C.mid, fontFamily: sans, fontSize: 13, fontWeight: 400,
-    letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer",
+    color: C.mid, fontFamily: sans, fontSize: 11, fontWeight: 400,
+    letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer",
+    transition: "all 0.2s",
   };
-  const greenBtn = { ...primaryBtn, background: "#2D6A2D" };
-  const roseBtn  = { ...primaryBtn, background: C.rose };
+  const greenBtn = { ...primaryBtn, background: C.slateMid, borderColor: C.slateMid };
+  const roseBtn  = { ...primaryBtn, background: C.rose, borderColor: C.rose };
   const tabBtn = (active) => ({
-    padding: "13px 22px", background: "transparent", border: "none",
-    borderBottom: `2px solid ${active ? C.sage : "transparent"}`,
-    color: active ? C.sage : C.muted, fontFamily: sans,
-    fontSize: 13, fontWeight: active ? 500 : 400,
-    letterSpacing: "0.08em", textTransform: "uppercase",
+    padding: "14px 24px", background: "transparent", border: "none",
+    borderBottom: `1.5px solid ${active ? C.slate : "transparent"}`,
+    color: active ? C.slate : C.muted, fontFamily: sans,
+    fontSize: 10, fontWeight: active ? 600 : 400,
+    letterSpacing: "0.14em", textTransform: "uppercase",
     cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap",
   });
   const attendancePill = (val) => ({
-    flex: 1, padding: "10px 6px",
-    border: `1.5px solid ${form.attendance === val ? C.sage : C.border}`,
-    borderRadius: 8, cursor: "pointer", textAlign: "center",
-    background: form.attendance === val ? C.sagePale : C.white,
-    transition: "all 0.15s",
+    flex: 1, padding: "11px 6px",
+    border: `1px solid ${form.attendance === val ? C.slate : C.border}`,
+    borderRadius: 0, cursor: "pointer", textAlign: "center",
+    background: form.attendance === val ? C.slatePale : C.white,
+    transition: "all 0.2s",
   });
   const statCard = () => ({
-    background: C.sagePale, borderRadius: 12, padding: "1rem 0.75rem",
-    textAlign: "center", border: `1px solid ${C.sageLight}`,
+    background: C.slatePale, borderRadius: 0, padding: "1rem 0.75rem",
+    textAlign: "center", border: `1px solid ${C.slateLight}`,
   });
 
   const formValid = form.firstName.trim() && form.lastName.trim() && form.email.trim() && form.phone.trim();
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: sans, color: C.dark }}>
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: sans, color: C.dark, WebkitFontSmoothing: "antialiased" }}>
 
       {/* ── Header ── */}
-      <div style={{ background: C.sage, padding: "3rem 1.5rem 2.5rem", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div style={{
+        background: "linear-gradient(180deg, #EDE9E0 0%, #E8E2D6 40%, #DDD8CE 100%)",
+        padding: "3rem 1.5rem 2.75rem", textAlign: "center", position: "relative", overflow: "hidden",
+        borderBottom: `1px solid ${C.border}`,
+      }}>
+        {/* Subtle linen texture */}
         <div style={{
-          position: "absolute", inset: 0, opacity: 0.06,
-          backgroundImage: "radial-gradient(circle at 20% 50%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 20%, #fff 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
+          position: "absolute", inset: 0, opacity: 0.18,
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23C4A87A' opacity='0.15'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23C4A87A' opacity='0.3'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23C4A87A' opacity='0.3'/%3E%3C/svg%3E\")",
         }} />
-        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: 14, color: C.sageLight, margin: "0 0 10px", letterSpacing: "0.1em", opacity: 0.8 }}>
-          Please join us to celebrate the bride to be
+        {/* Fleur-de-lis */}
+        <div style={{ marginBottom: 12 }}>
+          <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.55 }}>
+            <path d="M16 2C16 2 12 6 12 10C12 13 14 15 16 15C18 15 20 13 20 10C20 6 16 2 16 2Z" fill="#3D4F63"/>
+            <path d="M16 15C16 15 10 14 8 18C6 22 9 26 12 26L16 38L20 26C23 26 26 22 24 18C22 14 16 15 16 15Z" fill="#3D4F63"/>
+            <path d="M16 15C14 12 10 11 8 14C6 17 8 20 11 21" stroke="#3D4F63" strokeWidth="1" fill="none"/>
+            <path d="M16 15C18 12 22 11 24 14C26 17 24 20 21 21" stroke="#3D4F63" strokeWidth="1" fill="none"/>
+          </svg>
+        </div>
+        {/* Top scrollwork */}
+        <div style={{ marginBottom: 16, opacity: 0.4 }}>
+          <svg width="220" height="16" viewBox="0 0 220 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M110 8 C100 8 95 4 85 4 C75 4 70 8 60 8 C50 8 45 4 35 4 C25 4 15 8 5 8" stroke="#3D4F63" strokeWidth="0.75" fill="none"/>
+            <path d="M110 8 C120 8 125 4 135 4 C145 4 150 8 160 8 C170 8 175 4 185 4 C195 4 205 8 215 8" stroke="#3D4F63" strokeWidth="0.75" fill="none"/>
+            <circle cx="110" cy="8" r="2" fill="#B89A6A"/>
+            <circle cx="60" cy="8" r="1.5" fill="#B89A6A" opacity="0.6"/>
+            <circle cx="160" cy="8" r="1.5" fill="#B89A6A" opacity="0.6"/>
+          </svg>
+        </div>
+        <p style={{ fontFamily: sans, fontSize: 10, color: C.mid, margin: "0 0 6px", letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 500 }}>
+          Please join us to celebrate
         </p>
-        <h1 style={{ fontFamily: serif, fontSize: 38, fontWeight: 400, color: "#F5F0E8", margin: "0 0 6px", letterSpacing: "0.02em" }}>
+        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: 13, color: C.mid, margin: "0 0 10px", letterSpacing: "0.06em" }}>
+          the bride to be
+        </p>
+        {/* Bottom scrollwork */}
+        <div style={{ margin: "0 0 10px", opacity: 0.35 }}>
+          <svg width="160" height="10" viewBox="0 0 160 10" fill="none">
+            <path d="M80 5 C70 5 65 2 55 2 C45 2 40 5 30 5 C20 5 10 2 5 2" stroke="#3D4F63" strokeWidth="0.75" fill="none"/>
+            <path d="M80 5 C90 5 95 2 105 2 C115 2 120 5 130 5 C140 5 150 2 155 2" stroke="#3D4F63" strokeWidth="0.75" fill="none"/>
+          </svg>
+        </div>
+        <h1 style={{ fontFamily: script, fontSize: 58, fontWeight: 400, color: C.slate, margin: "0 0 4px", lineHeight: 1.1 }}>
           Bianca Jenkins
         </h1>
-        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: 16, color: C.sageLight, margin: "0 0 16px", opacity: 0.85 }}>
-          bridal shower
+        <p style={{ fontFamily: sans, fontSize: 10, color: C.gold, margin: "0 0 22px", letterSpacing: "0.28em", textTransform: "uppercase", fontWeight: 500 }}>
+          Bridal Shower
         </p>
-        <div style={{ display: "inline-flex", gap: 24, fontSize: 13, color: C.sageLight, opacity: 0.75, letterSpacing: "0.1em" }}>
-          <span>JUNE 6, 2026</span>
-          <span>·</span>
-          <span>NOON</span>
-          <span>·</span>
+        <div style={{ width: 48, height: 1, background: C.gold, margin: "0 auto 18px", opacity: 0.7 }} />
+        <div style={{ display: "inline-flex", gap: 20, fontSize: 10, color: C.mid, letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: sans, fontWeight: 400, flexWrap: "wrap", justifyContent: "center" }}>
+          <span>Saturday, June 6th, 2026</span>
+          <span style={{ color: C.gold, opacity: 0.6 }}>✦</span>
+          <span>Noon</span>
+          <span style={{ color: C.gold, opacity: 0.6 }}>✦</span>
           <a
             href="https://maps.apple.com/?address=200+E+Chestnut+Street,Chicago,IL+60611&q=Francesca%27s+on+Chestnut"
             target="_blank" rel="noopener noreferrer"
-            style={{ color: C.sageLight, textDecoration: "underline", textDecorationColor: "rgba(200,220,198,0.45)", textUnderlineOffset: 3, letterSpacing: "0.1em" }}
+            style={{ color: C.mid, textDecoration: "underline", textDecorationColor: `${C.gold}88`, textUnderlineOffset: 3 }}
           >
-            FRANCESCA'S ON CHESTNUT
+            Francesca's on Chestnut
           </a>
         </div>
       </div>
 
       {/* ── Tabs ── */}
-      <div style={{ background: C.white, borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "center", position: "relative" }}>
+      <div style={{ background: C.white, borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "center", position: "relative", boxShadow: "0 1px 8px rgba(60,50,40,0.04)" }}>
         {[["rsvp", "RSVP"], ["registry", "Registry"]].map(([id, lbl]) => (
           <button key={id} onClick={() => setTab(id)} style={tabBtn(tab === id)}>{lbl}</button>
         ))}
@@ -307,12 +349,12 @@ export default function App() {
         {tab === "rsvp" && (
           submitted ? (
             <div style={{ ...cardStyle, textAlign: "center", padding: "3.5rem 2rem" }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: C.sagePale, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", border: `1px solid ${C.sageLight}` }}>
+              <div style={{ width: 56, height: 56, background: C.slatePale, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", border: `1px solid ${C.slateLight}` }}>
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                  <path d="M4 11L9 16L18 6" stroke={C.sage} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4 11L9 16L18 6" stroke={C.slate} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h2 style={{ fontFamily: serif, fontSize: 26, fontWeight: 400, color: C.dark, margin: "0 0 10px" }}>Thank you!</h2>
+              <h2 style={{ fontFamily: script, fontSize: 40, fontWeight: 400, color: C.slate, margin: "0 0 10px" }}>Thank you!</h2>
               <p style={{ color: C.mid, lineHeight: 1.75, margin: "0 0 2rem", maxWidth: 320, marginLeft: "auto", marginRight: "auto" }}>
                 Your response has been received. We can't wait to celebrate with you!
               </p>
@@ -322,7 +364,8 @@ export default function App() {
             </div>
           ) : (
             <div style={cardStyle}>
-              <h2 style={{ fontFamily: serif, fontSize: 22, fontWeight: 400, color: C.dark, margin: "0 0 1.75rem" }}>Your Response</h2>
+              <h2 style={{ fontFamily: serif, fontSize: 26, fontWeight: 300, color: C.dark, margin: "0 0 0.25rem", letterSpacing: "0.02em" }}>Your Response</h2>
+              <div style={{ width: 32, height: 1, background: C.gold, marginBottom: "1.75rem", opacity: 0.7 }} />
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: "1.25rem" }}>
                 <div>
@@ -352,7 +395,7 @@ export default function App() {
                     <label key={val} style={attendancePill(val)}>
                       <input type="radio" name="att" value={val} checked={form.attendance === val}
                         onChange={() => setForm({ ...form, attendance: val })} style={{ display: "none" }} />
-                      <div style={{ fontSize: 12, color: form.attendance === val ? C.sage : C.muted, fontWeight: form.attendance === val ? 500 : 400, lineHeight: 1.4 }}>{lbl}</div>
+                      <div style={{ fontSize: 11, color: form.attendance === val ? C.slate : C.muted, fontWeight: form.attendance === val ? 500 : 400, lineHeight: 1.4, letterSpacing: "0.04em", fontFamily: sans }}>{lbl}</div>
                     </label>
                   ))}
                 </div>
@@ -388,14 +431,16 @@ export default function App() {
         {tab === "registry" && (
           <div>
             <div style={{ ...cardStyle, textAlign: "center", padding: "3rem 2rem 2.5rem", marginBottom: "1rem" }}>
-              <div style={{ width: 64, height: 64, borderRadius: "50%", background: C.rosePale, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", border: `1px solid ${C.roseMid}` }}>
-                <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-                  <path d="M13 3C13 3 6 7 6 13C6 16.31 9.13 19 13 19C16.87 19 20 16.31 20 13C20 7 13 3 13 3Z" stroke={C.rose} strokeWidth="1.5" strokeLinejoin="round"/>
-                  <path d="M13 19V23" stroke={C.rose} strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M9 23H17" stroke={C.rose} strokeWidth="1.5" strokeLinecap="round"/>
+              <div style={{ width: 56, height: 56, background: C.slatePale, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem", border: `1px solid ${C.slateLight}` }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M20 12V22H4V12" stroke={C.slate} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M22 7H2V12H22V7Z" stroke={C.slate} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 22V7" stroke={C.slate} strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C11 2 12 7 12 7Z" stroke={C.slate} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C13 2 12 7 12 7Z" stroke={C.slate} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h2 style={{ fontFamily: serif, fontSize: 26, fontWeight: 400, color: C.dark, margin: "0 0 10px" }}>Gift Registry</h2>
+              <h2 style={{ fontFamily: script, fontSize: 42, fontWeight: 400, color: C.slate, margin: "0 0 10px" }}>Gift Registry</h2>
               <p style={{ color: C.mid, lineHeight: 1.75, margin: "0 0 2rem", maxWidth: 340, marginLeft: "auto", marginRight: "auto" }}>
                 Bianca's registry links will be added here soon. Check back for curated wish lists from her favorite stores.
               </p>
@@ -414,12 +459,12 @@ export default function App() {
                 ))}
               </div>
             </div>
-            <div style={{ ...cardStyle, background: C.sagePale, border: `1px solid ${C.sageLight}`, padding: "1.25rem 1.5rem" }}>
+            <div style={{ ...cardStyle, background: C.slatePale, border: `1px solid ${C.slateLight}`, padding: "1.25rem 1.5rem" }}>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <div style={{ color: C.sageMid, fontSize: 18, flexShrink: 0 }}>💡</div>
+                <div style={{ color: C.dusty, fontSize: 16, flexShrink: 0 }}>✦</div>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: C.dark, marginBottom: 4 }}>For the organizer</div>
-                  <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.65 }}>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: C.dark, marginBottom: 4, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: sans }}>For the organizer</div>
+                  <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.75, fontFamily: serif }}>
                     Replace the placeholder store cards with real registry links by editing the registry section of this app. Each card can link to a specific registry page.
                   </div>
                 </div>
@@ -432,7 +477,7 @@ export default function App() {
         {tab === "admin" && (
           !adminUnlocked ? (
             <div style={{ ...cardStyle, maxWidth: 380, margin: "0 auto" }}>
-              <h2 style={{ fontFamily: serif, fontSize: 22, fontWeight: 400, textAlign: "center", margin: "0 0 6px" }}>Admin Access</h2>
+              <h2 style={{ fontFamily: script, fontSize: 38, fontWeight: 400, textAlign: "center", margin: "0 0 6px", color: C.slate }}>Admin Access</h2>
               <p style={{ fontSize: 13, color: C.muted, textAlign: "center", margin: "0 0 1.5rem" }}>Enter the password to manage RSVPs</p>
               <div style={{ marginBottom: "1rem" }}>
                 <label style={labelStyle}>Password</label>
@@ -459,8 +504,8 @@ export default function App() {
                   { label: "Maybe", value: stats.maybe },
                 ].map(({ label: lbl, value }) => (
                   <div key={lbl} style={statCard()}>
-                    <div style={{ fontFamily: serif, fontSize: 28, fontWeight: 400, color: C.sage, lineHeight: 1 }}>{value}</div>
-                    <div style={{ fontSize: 10, color: C.muted, marginTop: 6, letterSpacing: "0.06em", textTransform: "uppercase" }}>{lbl}</div>
+                    <div style={{ fontFamily: serif, fontSize: 32, fontWeight: 300, color: C.slate, lineHeight: 1 }}>{value}</div>
+                    <div style={{ fontSize: 9, color: C.muted, marginTop: 6, letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: sans }}>{lbl}</div>
                   </div>
                 ))}
               </div>
@@ -491,8 +536,8 @@ export default function App() {
 
               {/* Email summary form */}
               {showEmailForm && (
-                <div style={{ ...cardStyle, background: C.sagePale, border: `1px solid ${C.sageLight}`, marginBottom: "1.5rem" }}>
-                  <h3 style={{ fontFamily: serif, fontSize: 18, fontWeight: 400, margin: "0 0 10px", color: C.dark }}>Email RSVP Summary</h3>
+                <div style={{ ...cardStyle, background: C.slatePale, border: `1px solid ${C.slateLight}`, marginBottom: "1.5rem" }}>
+                  <h3 style={{ fontFamily: serif, fontSize: 20, fontWeight: 400, margin: "0 0 10px", color: C.dark, letterSpacing: "0.02em" }}>Email RSVP Summary</h3>
                   <p style={{ fontSize: 13, color: C.mid, margin: "0 0 1rem", lineHeight: 1.65 }}>
                     Send a full summary of all {stats.total} responses ({stats.yes} attending · {stats.no} not attending · {stats.maybe} maybe) to any email address.
                   </p>
@@ -578,8 +623,8 @@ export default function App() {
                                 {r ? (
                                   <span style={{
                                     fontSize: 11, padding: "2px 10px", borderRadius: 20, fontFamily: sans,
-                                    background: r.attendance === "yes" ? C.sagePale : r.attendance === "no" ? C.rosePale : "#FFF5F0",
-                                    color: r.attendance === "yes" ? C.sage : r.attendance === "no" ? C.roseDark : "#9B7040",
+                                    background: r.attendance === "yes" ? C.slatePale : r.attendance === "no" ? C.rosePale : "#F5F0E8",
+                                    color: r.attendance === "yes" ? C.slate : r.attendance === "no" ? C.roseDark : C.gold,
                                     letterSpacing: "0.05em", textTransform: "uppercase", whiteSpace: "nowrap",
                                   }}>
                                     {r.attendance === "yes" ? "✓ Attending" : r.attendance === "no" ? "✗ Declining" : "? Maybe"}
@@ -601,11 +646,11 @@ export default function App() {
                     <div style={{ padding: "10px 16px", background: C.bg, borderTop: `1px solid ${C.border}`, fontSize: 11, color: C.muted, fontFamily: sans, letterSpacing: "0.05em", display: "flex", gap: 16, flexWrap: "wrap" }}>
                       <span>{GUEST_LIST.length} invited</span>
                       <span>·</span>
-                      <span style={{ color: C.sage }}>{attending} attending</span>
+                      <span style={{ color: C.slate }}>{attending} attending</span>
                       <span>·</span>
                       <span style={{ color: C.roseDark }}>{declining} declining</span>
                       <span>·</span>
-                      <span style={{ color: "#9B7040" }}>{maybe} maybe</span>
+                      <span style={{ color: C.gold }}>{maybe} maybe</span>
                       <span>·</span>
                       <span>{pending} no response</span>
                     </div>
@@ -617,7 +662,7 @@ export default function App() {
               {adminView === "details" && (
               rsvps.length === 0 ? (
                 <div style={{ ...cardStyle, textAlign: "center", padding: "3rem", color: C.muted }}>
-                  <div style={{ fontFamily: serif, fontSize: 18, marginBottom: 8, color: C.sageMid }}>No responses yet</div>
+                  <div style={{ fontFamily: script, fontSize: 32, marginBottom: 8, color: C.dusty }}>No responses yet</div>
                   <div style={{ fontSize: 13 }}>Share the link to start collecting RSVPs.</div>
                 </div>
               ) : (
@@ -626,7 +671,7 @@ export default function App() {
                     {rsvps.length} Response{rsvps.length !== 1 ? "s" : ""}
                   </div>
                   {rsvps.slice().reverse().map(r => (
-                    <div key={r.id} style={{ ...cardStyle, marginBottom: 10, borderLeft: `3px solid ${r.attendance === "yes" ? C.sage : r.attendance === "no" ? C.rose : C.roseMid}` }}>
+                    <div key={r.id} style={{ ...cardStyle, marginBottom: 10, borderLeft: `2px solid ${r.attendance === "yes" ? C.dusty : r.attendance === "no" ? C.rose : C.gold}` }}>
 
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
                         <div style={{ flex: 1 }}>
@@ -634,8 +679,8 @@ export default function App() {
                             <span style={{ fontFamily: serif, fontSize: 17, fontWeight: 400 }}>{r.firstName} {r.lastName}</span>
                             <span style={{
                               fontSize: 11, padding: "2px 8px", borderRadius: 20,
-                              background: r.attendance === "yes" ? C.sagePale : r.attendance === "no" ? C.rosePale : "#FFF5F0",
-                              color: r.attendance === "yes" ? C.sage : r.attendance === "no" ? C.roseDark : "#9B7040",
+                              background: r.attendance === "yes" ? C.slatePale : r.attendance === "no" ? C.rosePale : "#F5F0E8",
+                              color: r.attendance === "yes" ? C.slate : r.attendance === "no" ? C.roseDark : C.gold,
                               letterSpacing: "0.05em", textTransform: "uppercase",
                             }}>
                               {r.attendance === "yes" ? "Attending" : r.attendance === "no" ? "Not Attending" : "Maybe"}
