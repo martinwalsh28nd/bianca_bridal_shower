@@ -441,22 +441,24 @@ export default function App() {
                 </svg>
               </div>
               <h2 style={{ fontFamily: script, fontSize: 42, fontWeight: 400, color: C.slate, margin: "0 0 10px" }}>Gift Registry</h2>
-              <p style={{ color: C.mid, lineHeight: 1.75, margin: "0 0 2rem", maxWidth: 340, marginLeft: "auto", marginRight: "auto" }}>
-                Bianca's registry links will be added here soon. Check back for curated wish lists from her favorite stores.
+              <p style={{ color: C.mid, lineHeight: 1.85, margin: "0 0 2rem", maxWidth: 360, marginLeft: "auto", marginRight: "auto", fontFamily: serif, fontSize: 16 }}>
+                Bianca & Jake's wedding registry is hosted on The Knot. View all their curated selections in one place.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12 }}>
-                {[
-                  { name: "Williams Sonoma", sub: "Kitchen & Home" },
-                  { name: "Crate & Barrel", sub: "Dining & Décor" },
-                  { name: "Zola", sub: "Wedding Registry" },
-                ].map(store => (
-                  <div key={store.name} style={{ background: C.ivory, borderRadius: 10, padding: "1.25rem 0.75rem", border: `1px solid ${C.border}`, opacity: 0.65 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 8, background: C.border, margin: "0 auto 10px" }} />
-                    <div style={{ fontSize: 12, fontWeight: 500, color: C.mid, marginBottom: 3 }}>{store.name}</div>
-                    <div style={{ fontSize: 11, color: C.muted }}>{store.sub}</div>
-                    <div style={{ fontSize: 10, color: C.muted, marginTop: 8, letterSpacing: "0.06em" }}>COMING SOON</div>
-                  </div>
-                ))}
+              <a
+                href="https://registry.theknot.com/bianca-jenkins-jake-devoy-october-2026/72357015"
+                target="_blank" rel="noopener noreferrer"
+                style={{
+                  display: "inline-block", padding: "14px 36px",
+                  border: `1px solid ${C.slate}`, background: C.slate, color: C.white,
+                  fontFamily: sans, fontSize: 11, fontWeight: 500,
+                  letterSpacing: "0.16em", textTransform: "uppercase",
+                  textDecoration: "none", transition: "all 0.2s",
+                }}
+              >
+                View Registry on The Knot
+              </a>
+              <div style={{ marginTop: "1.25rem", fontSize: 11, color: C.muted, fontFamily: sans, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Bianca Jenkins &nbsp;✦&nbsp; Jake DeVoy &nbsp;✦&nbsp; October 2026
               </div>
             </div>
             <div style={{ ...cardStyle, background: C.slatePale, border: `1px solid ${C.slateLight}`, padding: "1.25rem 1.5rem" }}>
