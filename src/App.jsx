@@ -480,17 +480,6 @@ export default function App() {
                 Bianca Jenkins &nbsp;✦&nbsp; Jacob DeVoy &nbsp;✦&nbsp; October 17, 2026
               </div>
             </div>
-            <div style={{ ...cardStyle, background: C.slatePale, border: `1px solid ${C.slateLight}`, padding: "1.25rem 1.5rem" }}>
-              <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <div style={{ color: C.dusty, fontSize: 16, flexShrink: 0 }}>✦</div>
-                <div>
-                  <div style={{ fontSize: 11, fontWeight: 600, color: C.dark, marginBottom: 4, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: sans }}>For the organizer</div>
-                  <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.75, fontFamily: serif }}>
-                    Replace the placeholder store cards with real registry links by editing the registry section of this app. Each card can link to a specific registry page.
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         )}
 
