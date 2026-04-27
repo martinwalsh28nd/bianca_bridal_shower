@@ -442,23 +442,42 @@ export default function App() {
               </div>
               <h2 style={{ fontFamily: script, fontSize: 42, fontWeight: 400, color: C.slate, margin: "0 0 10px" }}>Gift Registry</h2>
               <p style={{ color: C.mid, lineHeight: 1.85, margin: "0 0 2rem", maxWidth: 360, marginLeft: "auto", marginRight: "auto", fontFamily: serif, fontSize: 16 }}>
-                Bianca & Jake's wedding registry is hosted on The Knot. View all their curated selections in one place.
+                Bianca & Jacob have thoughtfully curated their registry at the following retailers.
               </p>
-              <a
-                href="https://registry.theknot.com/bianca-jenkins-jake-devoy-october-2026/72357015"
-                target="_blank" rel="noopener noreferrer"
-                style={{
-                  display: "inline-block", padding: "14px 36px",
-                  border: `1px solid ${C.slate}`, background: C.slate, color: C.white,
-                  fontFamily: sans, fontSize: 11, fontWeight: 500,
-                  letterSpacing: "0.16em", textTransform: "uppercase",
-                  textDecoration: "none", transition: "all 0.2s",
-                }}
-              >
-                View Registry on The Knot
-              </a>
-              <div style={{ marginTop: "1.25rem", fontSize: 11, color: C.muted, fontFamily: sans, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                Bianca Jenkins &nbsp;✦&nbsp; Jake DeVoy &nbsp;✦&nbsp; October 2026
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: "1.5rem" }}>
+                {[
+                  { name: "Zola", sub: "Wedding Registry", url: "https://www.zola.com/registry/biancaandjacoboctober17" },
+                  { name: "Crate & Barrel", sub: "Home & Dining", url: "https://www.crateandbarrel.com/gift-registry/bianca-jenkins-and-jacob-devoy/r7439269" },
+                ].map(store => (
+                  <a
+                    key={store.name}
+                    href={store.url}
+                    target="_blank" rel="noopener noreferrer"
+                    style={{
+                      display: "block", padding: "1.5rem 1rem",
+                      background: C.white, border: `1px solid ${C.border}`,
+                      textDecoration: "none", color: C.dark,
+                      transition: "all 0.2s", textAlign: "center",
+                    }}
+                  >
+                    <div style={{ fontSize: 10, color: C.gold, letterSpacing: "0.18em", textTransform: "uppercase", fontFamily: sans, marginBottom: 8, fontWeight: 500 }}>
+                      Registered at
+                    </div>
+                    <div style={{ fontFamily: serif, fontSize: 22, fontWeight: 400, color: C.slate, marginBottom: 4, letterSpacing: "0.02em" }}>
+                      {store.name}
+                    </div>
+                    <div style={{ fontSize: 11, color: C.muted, fontFamily: sans, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 14 }}>
+                      {store.sub}
+                    </div>
+                    <div style={{ width: 24, height: 1, background: C.gold, margin: "0 auto 14px", opacity: 0.7 }} />
+                    <div style={{ fontSize: 10, color: C.slate, fontFamily: sans, letterSpacing: "0.16em", textTransform: "uppercase", fontWeight: 500 }}>
+                      View Registry →
+                    </div>
+                  </a>
+                ))}
+              </div>
+              <div style={{ fontSize: 11, color: C.muted, fontFamily: sans, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Bianca Jenkins &nbsp;✦&nbsp; Jacob DeVoy &nbsp;✦&nbsp; October 17, 2026
               </div>
             </div>
             <div style={{ ...cardStyle, background: C.slatePale, border: `1px solid ${C.slateLight}`, padding: "1.25rem 1.5rem" }}>
